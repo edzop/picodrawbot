@@ -39,7 +39,7 @@ const log = (text, color) => {
 	logtext_element=document.getElementById('log')
 	logtext=logtext_element.innerHTML
 
-	logtext_element.innerHTML = `<span style="color: ${color}">${text}</span><br>` + logtext;
+	logtext_element.innerHTML = `<span style="color: ${color}">${text}</span>` + logtext;
 };
 
 const socket = new WebSocket('ws://' + location.host + '/echo');
@@ -51,10 +51,23 @@ socket.addEventListener('close', ev => {
 	log('<<< closed');
 });
 
-document.getElementById('commandform').onsubmit = ev => {
+
+document.getElementById('send_button').onclick = ev => {
 	ev.preventDefault();
 	const textField = document.getElementById('command');
 	log('>>> ' + textField.value, 'red');
+	socket.send(textField.value);
+	textField.value = '';
+};
+
+
+
+document.getElementById('ping_button').onclick = ev => {
+	ev.preventDefault();
+	const textField = document.getElementById('command');
+	for(let i=0;i<10;i++) {
+	log('->> ' + textField.value, 'green');
+	}
 	socket.send(textField.value);
 	textField.value = '';
 };

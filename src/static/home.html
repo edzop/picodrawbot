@@ -2,34 +2,36 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Ed BOT</title>
+        <title>Pico Draw Bot</title>
         <meta charset="UTF-8">
         <link rel="stylesheet" href="static/index.css" />
         <link rel="icon" href="static/favicon.ico" type="image/x-icon">
     </head>
     <body>
-        <form method="POST" id="commandform" action="">
-        <div class="container">
+        <form method="POST" id="commandform" class="container" action="">
+
             
             
                 <div class="header_area">
-                    <h1>Ed BOT {{cyclecount}}</h1>
+                    <h1>Pico Draw Bot</h1>
                 </div>
                 
                 <div class="comand_area">
                     <h2>Command</h2>
                         <textarea id="command" class="command" name="command">{{command}}</textarea>
                         <div>
-                            <input id="run_button" class="run_button" type="submit" value="SEND">
+                            <input id="send_button" type="button" class="button" value="SEND">
+                            <input id="ping_button" type="button" class="button" value="PING">
                 </div>
+
                 </div>
                 
                 <div class="log_area">
-                        <h2>Console Log</h2>
+                    <h2>Log</h2>
                         <div id="log" class="log" name="log">LOGAREA</textarea>
                 </div>
             
-        </div>
+        
         </form>
 
         <script src="static/index.js"></script>
