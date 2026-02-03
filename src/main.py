@@ -1,13 +1,11 @@
 from edlib import myled, mybutton, stepper
+import config
 
 import time
 
 time.sleep(0.5)
 
 print("Starting stepper motor test.")
-
-ssid = 'Blue Room-2.4G'
-password = 'blue1234'
 
 import network
 import socket
