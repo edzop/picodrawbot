@@ -1,6 +1,10 @@
 from edlib import myled, mybutton, stepper
 import config
 
+# create a file config.py containing:
+# ssid = yourssid
+# password = yourpassword
+
 import time
 
 time.sleep(0.5)
