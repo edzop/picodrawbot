@@ -1,5 +1,4 @@
 {% args command,cyclecount %}
-
 <!DOCTYPE html>
 <html>
     <head>
@@ -9,27 +8,30 @@
         <link rel="icon" href="static/favicon.ico" type="image/x-icon">
     </head>
     <body>
+        <form method="POST" id="commandform" action="">
         <div class="container">
-            <h1>Ed BOT {{cyclecount}}</h1>
-            <img src="static/xp.png">
-            <form method="POST" id="commandform" action="">
-                <div>
-                    <p>
-                        <h2>Command</h2>
-                        <textarea id="command" name="command" cols="40" rows="5">{{command}}</textarea>
+            
+            
+                <div class="header_area">
+                    <h1>Ed BOT {{cyclecount}}</h1>
+                </div>
+                
+                <div class="comand_area">
+                    <h2>Command</h2>
+                        <textarea id="command" class="command" name="command">{{command}}</textarea>
                         <div>
-                          <input id="run_button" type="submit" value="SEND">
-                        </div>
-                        <br>
+                            <input id="run_button" class="run_button" type="submit" value="SEND">
+                </div>
+                </div>
+                
+                <div class="log_area">
                         <h2>Console Log</h2>
-                        <div id="log" name="log">LOGAREA</textarea>                        
-                    </p>
+                        <div id="log" class="log" name="log">LOGAREA</textarea>
                 </div>
-                <div>
-                </div>
-            </form>
-
+            
         </div>
+        </form>
+
         <script src="static/index.js"></script>
     </body>
 </html>
