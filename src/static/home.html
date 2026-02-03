@@ -1,0 +1,35 @@
+{% args command,cyclecount %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Ed BOT</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="static/index.css" />
+        <link rel="icon" href="static/favicon.ico" type="image/x-icon">
+    </head>
+    <body>
+        <div class="container">
+            <h1>Ed BOT {{cyclecount}}</h1>
+            <img src="static/xp.png">
+            <form method="POST" id="commandform" action="">
+                <div>
+                    <p>
+                        <h2>Command</h2>
+                        <textarea id="command" name="command" cols="40" rows="5">{{command}}</textarea>
+                        <div>
+                          <input id="run_button" type="submit" value="SEND">
+                        </div>
+                        <br>
+                        <h2>Console Log</h2>
+                        <div id="log" name="log">LOGAREA</textarea>                        
+                    </p>
+                </div>
+                <div>
+                </div>
+            </form>
+
+        </div>
+        <script src="static/index.js"></script>
+    </body>
+</html>
