@@ -14,7 +14,7 @@ def connect():
 	wlan = network.WLAN(network.STA_IF)
 	print("Connecting...")
 	wlan.active(True)
-	wlan.connect(ssid, password)
+	wlan.connect(config.ssid, config.password)
 	while wlan.isconnected() == False:
 		if rp2.bootsel_button() == 1:
 			sys.exit()
