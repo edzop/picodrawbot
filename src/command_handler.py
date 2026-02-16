@@ -105,7 +105,7 @@ def handle_command(command):
 
 if __name__ == '__main__':
 	import command_processor
-	c = command_processor.commmandProcessor()
+	c = command_processor.CommandProcessor()
 	c.load_test_file("command_test.txt")
 	commands = c.get_commands()
 

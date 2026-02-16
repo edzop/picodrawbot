@@ -1,5 +1,7 @@
 
 import config
+import sys
+import rp2
 
 import command_processor
 import command_handler
@@ -115,7 +117,7 @@ async def echo(request, ws):
 
 		response=""
 
-		theCommandProcesser = command_processor.commmandProcessor()
+		theCommandProcesser = command_processor.CommandProcessor()
 
 		theCommandProcesser.process_raw_input(data)
 
