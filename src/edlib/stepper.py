@@ -86,3 +86,41 @@ class Dual_A4988:
             time.sleep(1e-6)
             self._step2.low()
             time.sleep(time_per_step)
+
+    def move_left(self, steps, speed=1000.0):
+
+        if steps>=0:
+            self.set_direction(True)
+        else:
+            self.set_direction(False)
+
+        time_per_step = 1.0 / speed
+        for count in range(abs(steps)):
+            self._step1.high()
+            time.sleep(1e-6)
+            self._step1.low()
+            time.sleep(time_per_step)
+
+            #self._step2.high()
+            #time.sleep(1e-6)
+            #self._step2.low()
+            #time.sleep(time_per_step)
+
+    def move_right(self, steps, speed=1000.0):
+
+        if steps>=0:
+            self.set_direction(True)
+        else:
+            self.set_direction(False)
+
+        time_per_step = 1.0 / speed
+        for count in range(abs(steps)):
+            #self._step1.high()
+            #time.sleep(1e-6)
+            #self._step1.low()
+            #time.sleep(time_per_step)
+
+            self._step2.high()
+            time.sleep(1e-6)
+            self._step2.low()
+            time.sleep(time_per_step)

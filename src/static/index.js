@@ -43,24 +43,21 @@ const log = (text, color) => {
 };
 
 const socket = new WebSocket('ws://' + location.host + '/echo');
+
 socket.addEventListener('message', ev => {
-	log('<<< ' + ev.data, 'blue');
+	log('> ' + ev.data, 'blue');
 });
 
 socket.addEventListener('close', ev => {
 	log('<<< closed');
 });
 
-
 document.getElementById('send_button').onclick = ev => {
 	ev.preventDefault();
 	const textField = document.getElementById('command');
-	log('>>> ' + textField.value, 'red');
+	log('< ' + textField.value, 'grey');
 	socket.send(textField.value);
-	textField.value = '';
 };
-
-
 
 document.getElementById('ping_button').onclick = ev => {
 	ev.preventDefault();
@@ -68,6 +65,5 @@ document.getElementById('ping_button').onclick = ev => {
 	for(let i=0;i<10;i++) {
 	log('->> ' + textField.value, 'green');
 	}
-	socket.send(textField.value);
 	textField.value = '';
 };

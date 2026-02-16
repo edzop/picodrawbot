@@ -1,5 +1,9 @@
-from edlib import myled, mybutton, stepper
+
 import config
+
+import command_processor
+import command_handler
+
 
 # create a file config.py containing:
 # ssid = yourssid
@@ -18,13 +22,15 @@ def connect():
 	wlan = network.WLAN(network.STA_IF)
 	print("Connecting...")
 	wlan.active(True)
+	attempts=0
 	wlan.connect(config.ssid, config.password)
 	while wlan.isconnected() == False:
 		if rp2.bootsel_button() == 1:
 			sys.exit()
-		print('Waiting for connection...')
+		print('Waiting for connection...(%d)'%attempts)
 
 		time.sleep(0.5)
+		attempts = attempts+1
 
 	ip = wlan.ifconfig()[0]
 	print(f'Connected on {ip}')
@@ -46,7 +52,6 @@ Response.default_content_type = 'text/html'
 Template.initialize("static")
 
 
-systemLED = myled.myLED("LED");
 
 CycleCount=0
 
@@ -58,7 +63,6 @@ async def index(request):
 	command="400"
 	global CycleCount
 	
-	systemLED.toggle()
 	CycleCount = CycleCount + 1
 	
 	if request.method == 'POST':
@@ -98,18 +102,32 @@ def static(request,path):
 	if ".." in path:
 		return "Not Found",404
 	return send_file("static/" +path)
-
-
   
 @app.route('/echo')
 @with_websocket
 async def echo(request, ws):
-	global systemLED
+
+
+	
 	while True:
 		data = await ws.receive()
 		print(data)
-		systemLED.toggle()
-		await ws.send(data)
+
+		response=""
+
+		theCommandProcesser = command_processor.commmandProcessor()
+
+		theCommandProcesser.process_raw_input(data)
+
+		#theCommandProcesser.dump_commands()
+
+		commandlist = theCommandProcesser.get_commands()
+
+		for command in commandlist:
+			#print(command)
+			response = response + "." + command_handler.handle_command(command)
+
+		await ws.send(response)
 
 
 def web_server():
@@ -122,7 +140,5 @@ def web_server():
 
 if __name__ == '__main__':
 	web_server()
-
-systemLED.toggle()
 
 print("Finished.")
