@@ -21,23 +21,23 @@ import network
 import socket
 
 def connect():
-	wlan = network.WLAN(network.STA_IF)
-	print("Connecting...")
-	wlan.active(True)
-	attempts=0
-	wlan.connect(config.ssid, config.password)
-	while wlan.isconnected() == False:
-		if rp2.bootsel_button() == 1:
-			sys.exit()
-		print('Waiting for connection...(%d)'%attempts)
+    wlan = network.WLAN(network.STA_IF)
+    print("Connecting...")
+    wlan.active(True)
+    attempts=0
+    wlan.connect(config.ssid, config.password)
+    while wlan.isconnected() == False:
+        if rp2.bootsel_button() == 1:
+            sys.exit()
+        print('Waiting for connection...(%d)'%attempts)
 
-		time.sleep(0.5)
-		attempts = attempts+1
+        time.sleep(0.5)
+        attempts = attempts+1
 
-	ip = wlan.ifconfig()[0]
-	print(f'Connected on {ip}')
+    ip = wlan.ifconfig()[0]
+    print(f'Connected on {ip}')
 
-	return ip
+    return ip
 
 connect()
 
@@ -60,87 +60,85 @@ CycleCount=0
 @app.route('/', methods=['GET', 'POST'])
 async def index(request):
 
-	response="OK"
+    response="OK"
 
-	command="400"
-	global CycleCount
-	
-	CycleCount = CycleCount + 1
-	
-	if request.method == 'POST':
-		
-		#name = request.form.get('command')
-		#return Template('index.html').render(name=name)
-		command = request.form.get('command')
+    command="400"
+    global CycleCount
+    
+    CycleCount = CycleCount + 1
+    
+    if request.method == 'POST':
+        
+        #name = request.form.get('command')
+        #return Template('index.html').render(name=name)
+        command = request.form.get('command')
 
-		print(f"Command: {command} ")
-		
-		#response = Template("index.html").render(name=name,title="sd")
-		
-	#return "dd"
-	else:
-		print("nop post")
-	
-	response =  Template('home.html').render(command=command,cyclecount=CycleCount)
-		
-	return response
+        print(f"Command: {command} ")
+        
+        #response = Template("index.html").render(name=name,title="sd")
+        
+    #return "dd"
+    else:
+        print("nop post")
+    
+    response =  Template('home.html').render(command=command,cyclecount=CycleCount)
+        
+    return response
 
 @app.get('/shutdown')
 def shutdown(request):
-	request.app.shutdown()
-	return "Shutdown..."
+    request.app.shutdown()
+    return "Shutdown..."
 
 @app.route('/counter')
 @with_websocket
 async def getcounter(request, ws):
-	val=0
-	while True:
-		time.sleep(.3)
-		val=val+1
-		await ws.send(str(val))
+    val=0
+    while True:
+        time.sleep(.3)
+        val=val+1
+        await ws.send(str(val))
 
 @app.route("/static/<path:path>")
 def static(request,path):
-	if ".." in path:
-		return "Not Found",404
-	return send_file("static/" +path)
+    if ".." in path:
+        return "Not Found",404
+    return send_file("static/" +path)
   
 @app.route('/echo')
 @with_websocket
 async def echo(request, ws):
+    
+    while True:
+        data = await ws.receive()
+        print(data)
 
+        response=""
 
-	
-	while True:
-		data = await ws.receive()
-		print(data)
+        theCommandProcesser = command_processor.CommandProcessor()
 
-		response=""
+        theCommandProcesser.process_raw_input(data)
 
-		theCommandProcesser = command_processor.CommandProcessor()
+        #theCommandProcesser.dump_commands()
 
-		theCommandProcesser.process_raw_input(data)
+        commandlist = theCommandProcesser.get_commands()
 
-		#theCommandProcesser.dump_commands()
+        for command in commandlist:
+            #print(command)
+            response = response + "." + command_handler.handle_command(command)
 
-		commandlist = theCommandProcesser.get_commands()
-
-		for command in commandlist:
-			#print(command)
-			response = response + "." + command_handler.handle_command(command)
-
-		await ws.send(response)
+        await ws.send(response)
 
 
 def web_server():
-	try:
-		connect()
-		app.run(port=8080,debug=True)
-	except RuntimeError as e:
-		print(e)
-		sys.exit()
+    try:
+        connect()
+        app.run(port=8080,debug=True)
+    except RuntimeError as e:
+        print(e)
+        sys.exit()
 
 if __name__ == '__main__':
-	web_server()
+    web_server()
 
 print("Finished.")
