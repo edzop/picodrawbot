@@ -5,3 +5,5 @@ BL 3
 BW 17
 
 REPEAT 4 [ FW 10 RT 90 ]
+
+FOR 10 100 10 [ FW $i RT 30 ]
