@@ -37,8 +37,22 @@ class CommandProcessor:
                 for _ in range(count):
                     commands.extend(block_commands)
 
-            elif index + 1 < len(tokens) and tokens[index + 1].isdigit():
-                commands.append([token, int(tokens[index + 1])])
+            elif token.upper() == 'FOR':
+                start = int(tokens[index + 1])
+                end = int(tokens[index + 2])
+                step = int(tokens[index + 3])
+                index += 4
+                if index < len(tokens) and tokens[index] == '[':
+                    index += 1  # skip [
+                block_commands, index = self.parse_block(tokens, index)
+                for i in range(start, end + 1, step):
+                    for cmd in block_commands:
+                        param = i if cmd[1] == '$i' else cmd[1]
+                        commands.append([cmd[0], param])
+
+            elif index + 1 < len(tokens) and (tokens[index + 1].isdigit() or tokens[index + 1] == '$i'):
+                param = tokens[index + 1] if tokens[index + 1] == '$i' else int(tokens[index + 1])
+                commands.append([token, param])
                 index += 2
 
             else:

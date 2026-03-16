@@ -39,8 +39,25 @@ class CommandProcessor {
                     commands.push(...blockCommands);
                 }
 
-            } else if (index + 1 < tokens.length && /^\d+$/.test(tokens[index + 1])) {
-                commands.push([token, parseInt(tokens[index + 1], 10)]);
+            } else if (token.toUpperCase() === 'FOR') {
+                const start = parseInt(tokens[index + 1], 10);
+                const end = parseInt(tokens[index + 2], 10);
+                const step = parseInt(tokens[index + 3], 10);
+                index += 4;
+                if (index < tokens.length && tokens[index] === '[') {
+                    index += 1; // skip [
+                }
+                let blockCommands;
+                [blockCommands, index] = this.parseBlock(tokens, index);
+                for (let i = start; i <= end; i += step) {
+                    for (const cmd of blockCommands) {
+                        commands.push([cmd[0], cmd[1] === '$i' ? i : cmd[1]]);
+                    }
+                }
+
+            } else if (index + 1 < tokens.length && (/^\d+$/.test(tokens[index + 1]) || tokens[index + 1] === '$i')) {
+                const raw = tokens[index + 1];
+                commands.push([token, raw === '$i' ? raw : parseInt(raw, 10)]);
                 index += 2;
 
             } else {
