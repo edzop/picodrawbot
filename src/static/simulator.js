@@ -226,10 +226,8 @@ document.addEventListener('DOMContentLoaded', () => {
             ev.preventDefault();
             const text = document.getElementById('command').value;
             const results = sim.run(text);
-            const simLog = document.getElementById('sim_log');
-            if (simLog) simLog.innerHTML = '';
             const lines = results.length ? results : ['(no commands)'];
-            lines.forEach(r => log(r, 'green', 'sim_log'));
+            lines.forEach(r => log(r, 'green'));
         });
     }
 
