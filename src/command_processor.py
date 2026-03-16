@@ -1,8 +1,7 @@
 class CommandProcessor:
 
-    command_list=[]
-
     def __init__(self):
+        self.command_list = []
         print("Command Processor Loaded")
         
     def get_commands(self):
