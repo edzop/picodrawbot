@@ -3,3 +3,5 @@ RT 10 FW 10
 BL 3
 
 BW 17
+
+REPEAT 4 [ FW 10 RT 90 ]

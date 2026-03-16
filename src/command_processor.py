@@ -3,79 +3,72 @@ class CommandProcessor:
     def __init__(self):
         self.command_list = []
         print("Command Processor Loaded")
-        
+
     def get_commands(self):
         return self.command_list
-        
+
     def dump_commands(self):
         self.print_section("Dump commands")
         for command in self.command_list:
             print(command)
-        
-    def process_line(self,line,line_number):
 
-        commands = line.split()
+    def tokenize(self, data):
+        tokens = []
+        for line in data.splitlines():
+            tokens.extend(line.split())
+        return tokens
 
-        current_command_index=0
-        command_count=len(commands)
-        
-        if command_count>0:
-            do_continue=True
-        else:
-            do_continue=False
+    def parse_block(self, tokens, index):
+        """Parse tokens from index until a closing ] or end of tokens.
+        Returns (list of [command, param] pairs, next index)."""
+        commands = []
+        while index < len(tokens):
+            token = tokens[index]
 
+            if token == ']':
+                return commands, index + 1
 
-        while do_continue:
+            elif token.upper() == 'REPEAT':
+                count = int(tokens[index + 1])
+                index += 2
+                if index < len(tokens) and tokens[index] == '[':
+                    index += 1  # skip [
+                block_commands, index = self.parse_block(tokens, index)
+                for _ in range(count):
+                    commands.extend(block_commands)
 
-            parm_val=None
+            elif index + 1 < len(tokens) and tokens[index + 1].isdigit():
+                commands.append([token, int(tokens[index + 1])])
+                index += 2
 
-            command = commands[current_command_index]
-            next_command=None
-
-            if current_command_index<command_count-1:
-                next_command=commands[current_command_index+1]
-
-                if next_command.isdigit():
-                    parm_val=int(next_command)
-
-            if parm_val is not None:
-                current_command_index=current_command_index+2
-                self.command_list.append([ command,parm_val ] )
-                print("line: %d Command: %s Parameter: %d"%(line_number+1,command,parm_val))
             else:
-                current_command_index=current_command_index+1
-                    
-            if current_command_index==command_count:
-                do_continue=False
+                index += 1
 
-    def print_section(self,name):
+        return commands, index
+
+    def process_raw_input(self, data):
+        self.command_list.clear()
+
+        self.print_section("RawData")
+        print(data)
+
+        tokens = self.tokenize(data)
+        self.command_list, _ = self.parse_block(tokens, 0)
+
+    def print_section(self, name):
         self.print_seperator()
         print(name)
         self.print_seperator()
 
-
     def print_seperator(self):
         print("---------------------------")
 
-    def process_raw_input(self,data):
-        self.command_list.clear()
-        
-        self.print_section("RawData")
-        print(data)
-
-        lines = data.splitlines()
-
-        for line_number,line in enumerate(lines):
-            self.process_line(line,line_number)
-
-
-    def load_test_file(self,filename):
-        data=None
+    def load_test_file(self, filename):
+        data = None
 
         try:
             with open(filename, 'r') as file:
-                raw = file.read()
-                data = raw
+                data = file.read()
         except Exception as e:
             print(e)
 
@@ -85,11 +78,3 @@ class CommandProcessor:
         self.dump_commands()
 
         return data
-
-
-
-        
-
-
-        
-
