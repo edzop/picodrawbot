@@ -35,11 +35,9 @@ function update(data) {
 }
 
 
-const log = (text, color) => {
-	logtext_element=document.getElementById('log')
-	logtext=logtext_element.innerHTML
-
-	logtext_element.innerHTML = `<span style="color: ${color}">${text}</span>` + logtext;
+const log = (text, color, elementId = 'log') => {
+	logtext_element = document.getElementById(elementId);
+	logtext_element.innerHTML = `<span style="color: ${color}">${text}</span>` + logtext_element.innerHTML;
 };
 
 const socket = new WebSocket('ws://' + location.host + '/echo');

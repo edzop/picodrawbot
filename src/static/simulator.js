@@ -220,18 +220,16 @@ document.addEventListener('DOMContentLoaded', () => {
     sim.draw();
 
     const simButton = document.getElementById('sim_button');
-    const simLog = document.getElementById('sim_log');
 
     if (simButton) {
         simButton.addEventListener('click', ev => {
             ev.preventDefault();
             const text = document.getElementById('command').value;
             const results = sim.run(text);
-            if (simLog) {
-                simLog.innerHTML = results
-                    .map(r => `<div>${r}</div>`)
-                    .join('') || '<div>(no commands)</div>';
-            }
+            const simLog = document.getElementById('sim_log');
+            if (simLog) simLog.innerHTML = '';
+            const lines = results.length ? results : ['(no commands)'];
+            lines.forEach(r => log(r, 'green', 'sim_log'));
         });
     }
 
