@@ -8,5 +8,8 @@ BW 17
 # Draw a square
 REPEAT 4 [ FW 10 RT 90 ]
 
+# Simple repeat (case-insensitive)
+repeat 10 [ fw 5 lt 6 ]
+
 # Draw a spiral
 FOR 10 100 10 [ FW $i RT 30 ]

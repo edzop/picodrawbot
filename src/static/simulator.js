@@ -58,7 +58,7 @@ class CommandProcessor {
 
             } else if (index + 1 < tokens.length && (/^\d+$/.test(tokens[index + 1]) || tokens[index + 1] === '$i')) {
                 const raw = tokens[index + 1];
-                commands.push([token, raw === '$i' ? raw : parseInt(raw, 10)]);
+                commands.push([token.toUpperCase(), raw === '$i' ? raw : parseInt(raw, 10)]);
                 index += 2;
 
             } else {

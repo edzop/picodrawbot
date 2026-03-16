@@ -33,6 +33,11 @@ REPEAT <count> [ <commands> ]
 REPEAT 4 [ FW 50 RT 30 ]
 ```
 
+Commands inside the block are case-insensitive:
+```
+repeat 10 [ fw 5 lt 6 ]
+```
+
 ### FOR
 
 Executes a block of commands once per iteration, stepping a counter variable `$i` from a start value to an end value (inclusive).

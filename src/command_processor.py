@@ -53,7 +53,7 @@ class CommandProcessor:
 
             elif index + 1 < len(tokens) and (tokens[index + 1].isdigit() or tokens[index + 1] == '$i'):
                 param = tokens[index + 1] if tokens[index + 1] == '$i' else int(tokens[index + 1])
-                commands.append([token, param])
+                commands.append([token.upper(), param])
                 index += 2
 
             else:
