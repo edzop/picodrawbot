@@ -71,8 +71,34 @@ class CommandProcessor:
         self.print_section("RawData")
         print(data)
 
-        tokens = self.tokenize(data)
-        self.command_list, _ = self.parse_block(tokens, 0)
+        pending_tokens = []
+        bracket_depth = 0
+
+        for line in data.splitlines():
+            parts = line.split('#', 1)
+            code_part = parts[0]
+            comment_text = parts[1].strip() if len(parts) > 1 else None
+
+            line_tokens = code_part.split()
+            for tok in line_tokens:
+                if tok == '[':
+                    bracket_depth += 1
+                elif tok == ']':
+                    bracket_depth -= 1
+            pending_tokens.extend(line_tokens)
+
+            if bracket_depth <= 0 and pending_tokens:
+                cmds, _ = self.parse_block(pending_tokens, 0)
+                self.command_list.extend(cmds)
+                pending_tokens = []
+                bracket_depth = 0
+
+            if comment_text:
+                self.command_list.append(['COMMENT', comment_text])
+
+        if pending_tokens:
+            cmds, _ = self.parse_block(pending_tokens, 0)
+            self.command_list.extend(cmds)
 
     def print_section(self, name):
         self.print_seperator()

@@ -40,6 +40,10 @@ def handle_command(command):
     print(command)
 
     command_name=command[0]
+
+    if command_name == 'COMMENT':
+        return '# ' + str(command[1])
+
     parm=int(command[1])
 
     if debug:

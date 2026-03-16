@@ -76,8 +76,37 @@ class CommandProcessor {
 
     processRawInput(data) {
         this.commandList = [];
-        const tokens = this.tokenize(data);
-        [this.commandList] = this.parseBlock(tokens, 0);
+        const pendingTokens = [];
+        let bracketDepth = 0;
+
+        for (const line of data.split('\n')) {
+            const hashIdx = line.indexOf('#');
+            const codePart = hashIdx >= 0 ? line.slice(0, hashIdx) : line;
+            const commentText = hashIdx >= 0 ? line.slice(hashIdx + 1).trim() : null;
+
+            const lineTokens = codePart.trim().split(/\s+/).filter(s => s.length > 0);
+            for (const tok of lineTokens) {
+                if (tok === '[') bracketDepth++;
+                else if (tok === ']') bracketDepth--;
+            }
+            pendingTokens.push(...lineTokens);
+
+            if (bracketDepth <= 0 && pendingTokens.length > 0) {
+                const [cmds] = this.parseBlock(pendingTokens, 0);
+                this.commandList.push(...cmds);
+                pendingTokens.length = 0;
+                bracketDepth = 0;
+            }
+
+            if (commentText) {
+                this.commandList.push(['COMMENT', commentText]);
+            }
+        }
+
+        if (pendingTokens.length > 0) {
+            const [cmds] = this.parseBlock(pendingTokens, 0);
+            this.commandList.push(...cmds);
+        }
     }
 }
 
@@ -102,6 +131,11 @@ class RobotSimulator {
     handleCommand(command) {
         const name = command[0];
         const parm = command[1];
+
+        if (name === 'COMMENT') {
+            return `# ${parm}`;
+        }
+
         const steps = parm * this.direction;
 
         if (name === 'LT') {
@@ -210,7 +244,7 @@ class RobotSimulator {
         const results = [];
         for (const cmd of processor.getCommands()) {
             const r = this.handleCommand(cmd);
-            results.push(`${r}(${cmd[0]} ${cmd[1]})`);
+            results.push(cmd[0] === 'COMMENT' ? r : `${r}(${cmd[0]} ${cmd[1]})`);
         }
         this.draw();
         return results;
@@ -233,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const text = document.getElementById('command').value;
             const results = sim.run(text);
             const lines = results.length ? results : ['(no commands)'];
-            lines.forEach(r => log(r, 'green'));
+            lines.forEach(r => log(r, r.startsWith('# ') ? 'orange' : 'green'));
         });
     }
 
