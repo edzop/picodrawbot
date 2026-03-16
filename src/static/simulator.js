@@ -10,36 +10,50 @@ class CommandProcessor {
         return this.commandList;
     }
 
-    processLine(line, lineNumber) {
-        const commands = line.trim().split(/\s+/).filter(s => s.length > 0);
-        const commandCount = commands.length;
-        if (commandCount === 0) return;
+    tokenize(data) {
+        const tokens = [];
+        for (const line of data.split('\n')) {
+            tokens.push(...line.trim().split(/\s+/).filter(s => s.length > 0));
+        }
+        return tokens;
+    }
 
-        let i = 0;
-        while (i < commandCount) {
-            const command = commands[i];
-            let parmVal = null;
+    parseBlock(tokens, index) {
+        const commands = [];
+        while (index < tokens.length) {
+            const token = tokens[index];
 
-            if (i < commandCount - 1) {
-                const next = commands[i + 1];
-                if (/^\d+$/.test(next)) {
-                    parmVal = parseInt(next, 10);
-                }
+            if (token === ']') {
+                return [commands, index + 1];
             }
 
-            if (parmVal !== null) {
-                this.commandList.push([command, parmVal]);
-                i += 2;
+            if (token.toUpperCase() === 'REPEAT') {
+                const count = parseInt(tokens[index + 1], 10);
+                index += 2;
+                if (index < tokens.length && tokens[index] === '[') {
+                    index += 1; // skip [
+                }
+                let blockCommands;
+                [blockCommands, index] = this.parseBlock(tokens, index);
+                for (let i = 0; i < count; i++) {
+                    commands.push(...blockCommands);
+                }
+
+            } else if (index + 1 < tokens.length && /^\d+$/.test(tokens[index + 1])) {
+                commands.push([token, parseInt(tokens[index + 1], 10)]);
+                index += 2;
+
             } else {
-                i += 1;
+                index += 1;
             }
         }
+        return [commands, index];
     }
 
     processRawInput(data) {
         this.commandList = [];
-        const lines = data.split('\n');
-        lines.forEach((line, idx) => this.processLine(line, idx));
+        const tokens = this.tokenize(data);
+        [this.commandList] = this.parseBlock(tokens, 0);
     }
 }
 
