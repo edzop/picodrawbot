@@ -1,9 +1,12 @@
+# Basic movement commands
 LT 10
 RT 10 FW 10
 BL 3
 
 BW 17
 
+# Draw a square
 REPEAT 4 [ FW 10 RT 90 ]
 
+# Draw a spiral
 FOR 10 100 10 [ FW $i RT 30 ]

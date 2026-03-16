@@ -13,7 +13,8 @@ class CommandProcessor {
     tokenize(data) {
         const tokens = [];
         for (const line of data.split('\n')) {
-            tokens.push(...line.trim().split(/\s+/).filter(s => s.length > 0));
+            const stripped = line.split('#')[0];
+            tokens.push(...stripped.trim().split(/\s+/).filter(s => s.length > 0));
         }
         return tokens;
     }

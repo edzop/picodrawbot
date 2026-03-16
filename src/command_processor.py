@@ -15,6 +15,7 @@ class CommandProcessor:
     def tokenize(self, data):
         tokens = []
         for line in data.splitlines():
+            line = line.split('#')[0]
             tokens.extend(line.split())
         return tokens
 
