@@ -49,8 +49,8 @@
 
 	position: absolute;
 	height: 40%;
-	
-	width: 97%;
+
+	width: calc(100% - 450px);
 	overflow-y: scroll;
  	
 	scroll-behavior: smooth;
@@ -100,21 +100,21 @@ h2 {
 }
 
 .container {
-	display: grid; 
-	grid-auto-columns: 1fr; 
-	grid-template-rows: minmax(min-content,0.1fr) minmax(min-content,1.0fr) 2.3fr; 
-	gap: 0px 0px; 
+	display: grid;
+	grid-template-columns: 1fr 440px;
+	grid-template-rows: minmax(min-content,0.1fr) minmax(min-content,1.0fr) 2.3fr;
+	gap: 0px 0px;
 	width: 100%;
 	height: 100%;
 	overflow: hidden;
 	position: relative;
-  
 }
 
-.header_area, .command_area, .log_area {
-
+.header_area { grid-area: 1 / 1 / 2 / 3; }
+.comand_area  { grid-area: 2 / 1 / 3 / 2; }
+.log_area     { grid-area: 3 / 1 / 4 / 2; }
+.simulator_area {
+	grid-area: 2 / 2 / 4 / 3;
+	overflow-y: auto;
+	padding: 0 0.5rem 0.5rem;
 }
-
-.header_area { grid-area: 1 / 1 / 2 / 2; }
-.command_area { grid-area: 2 / 1 / 3 / 2; }
-.log_area { grid-area: 3 / 1 / 4 / 2; }
