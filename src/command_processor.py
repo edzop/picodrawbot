@@ -41,8 +41,12 @@ class CommandProcessor:
             elif token.upper() == 'FOR':
                 start = int(tokens[index + 1])
                 end = int(tokens[index + 2])
-                step = int(tokens[index + 3])
-                index += 4
+                index += 3
+                if index < len(tokens) and tokens[index] not in ('[', ']') and tokens[index].lstrip('-').isdigit():
+                    step = int(tokens[index])
+                    index += 1
+                else:
+                    step = 1
                 if index < len(tokens) and tokens[index] == '[':
                     index += 1  # skip [
                 block_commands, index = self.parse_block(tokens, index)

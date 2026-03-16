@@ -11,5 +11,8 @@ REPEAT 4 [ FW 10 RT 90 ]
 # Simple repeat (case-insensitive)
 repeat 10 [ fw 5 lt 6 ]
 
-# Draw a spiral
+# Draw a spiral (explicit step)
 FOR 10 100 10 [ FW $i RT 30 ]
+
+# Draw a spiral (default step=1)
+FOR 1 10 [ FW $i RT 30 ]

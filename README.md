@@ -44,18 +44,22 @@ Executes a block of commands once per iteration, stepping a counter variable `$i
 
 **Syntax:**
 ```
-FOR <start> <end> <step> [ <commands> ]
+FOR <start> <end> [ <step> ] [ <commands> ]
 ```
 
 - `<start>` — initial value of `$i`
 - `<end>` — final value of `$i` (inclusive)
-- `<step>` — amount `$i` increases each iteration
+- `<step>` — *(optional, default 1)* amount `$i` increases each iteration
 - `$i` — use inside the block to refer to the current counter value
 
-**Example** — draw a spiral:
+**Examples:**
+```
+FOR 1 10 [ FW $i RT 30 ]
+```
+Runs 10 iterations with `$i` = 1, 2, … 10 (step defaults to 1).
 ```
 FOR 10 100 10 [ FW $i RT 30 ]
 ```
-This runs 10 iterations with `$i` = 10, 20, 30, … 100.
+Runs 10 iterations with `$i` = 10, 20, … 100.
 
 Both constructs can be used anywhere in a command sequence and can appear on a single line or spread across multiple lines.

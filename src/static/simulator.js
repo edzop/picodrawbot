@@ -43,8 +43,14 @@ class CommandProcessor {
             } else if (token.toUpperCase() === 'FOR') {
                 const start = parseInt(tokens[index + 1], 10);
                 const end = parseInt(tokens[index + 2], 10);
-                const step = parseInt(tokens[index + 3], 10);
-                index += 4;
+                index += 3;
+                let step;
+                if (index < tokens.length && tokens[index] !== '[' && tokens[index] !== ']' && /^-?\d+$/.test(tokens[index])) {
+                    step = parseInt(tokens[index], 10);
+                    index += 1;
+                } else {
+                    step = 1;
+                }
                 if (index < tokens.length && tokens[index] === '[') {
                     index += 1; // skip [
                 }
